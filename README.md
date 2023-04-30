@@ -44,3 +44,36 @@ It should be passed as a parameter in the configuration file
         properties.put(Environment.HBM2DDL_AUTO, "update");
         
         configuration.setProperties(properties);
+
+04-27:
+
+1. Saving a new entity in the database:
+
+Method 1:
+
+        Session session = sessionFactory.getCurrentSession();
+
+        //Transient state
+        Session session = sessionFactory.openSession();
+
+        Transaction transaction = session.beginTransaction();
+
+        //Persistent state
+        session.persist(student);
+
+        transaction.commit();
+        session.close();
+
+Method 2:
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        //Persistent state
+        session.save(student);
+
+        session.getTransaction().commit();
+        session.close();
+
+
+2. If the commit is not called, the changes will not be reflected in the database. But table metadata will be created.
